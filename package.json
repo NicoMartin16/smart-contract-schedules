@@ -1,0 +1,20 @@
+{
+  "name": "smart-contract-schedules",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:compile-contracts": "npx hardhat compile",
+    "start:smart-contracts": "npx hardhat node",
+    "test:smart-contracts": "npx hardhat test",
+    "test:smart-contracts-coverage": "set SOLIDITY_COVERAGE=true && npx hardhat coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "hardhat": "^2.22.15"
+  }
+}
