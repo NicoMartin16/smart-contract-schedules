@@ -42,9 +42,10 @@ describe("CourseManagementContract", () => {
             // Assert
             const course = await courseContract.read.courses([0]) as any[];
             assert.ok(course);
-            assert.equal(course[0], "Integral Calculus");
-            assert.equal(course[1], "Study the principles of integral calculus");
-            assert.equal(course[2], 3);
+            assert.equal(course[0], 0);
+            assert.equal(course[1], "Integral Calculus");
+            assert.equal(course[2], "Study the principles of integral calculus");
+            assert.equal(course[3], 3);
         
         });
         
@@ -55,10 +56,11 @@ describe("CourseManagementContract", () => {
             // Act
             const result = await courseContract.read.getCourse([0]) as any[];
             // Assert
-            assert.equal(result[0], "Integral Calculus");
-            assert.equal(result[1], "Study the principles of integral calculus");
-            assert.equal(result[2], "3");
-            assert.isTrue(result[3]);
+            assert.equal(result[0], 0);
+            assert.equal(result[1], "Integral Calculus");
+            assert.equal(result[2], "Study the principles of integral calculus");
+            assert.equal(result[3], "3");
+            assert.isTrue(result[4]);
         });
 
         it("should update a course by id", async () => {
@@ -70,9 +72,10 @@ describe("CourseManagementContract", () => {
             const courseUpdated = await courseContract.read.courses([0]) as any[];
             // Assert
             assert.ok(result);
-            assert.equal(courseUpdated[0], "Fundamentals of Integral Calculus");
-            assert.equal(courseUpdated[1], "Study the principles of integral calculus");
-            assert.equal(courseUpdated[2], 3);
+            assert.equal(courseUpdated[0], 0);
+            assert.equal(courseUpdated[1], "Fundamentals of Integral Calculus");
+            assert.equal(courseUpdated[2], "Study the principles of integral calculus");
+            assert.equal(courseUpdated[3], 3);
         });
 
         it("should list created courses", async () => {
@@ -99,7 +102,7 @@ describe("CourseManagementContract", () => {
             const result = await courseContract.write.deleteCourse([0]);
             const course = await courseContract.read.getCourse([0]) as any[];
             // Assert
-            assert.isFalse(course[3]);
+            assert.isFalse(course[4]);
         });
 
         it("should add a schedule to a course by id", async () => {
