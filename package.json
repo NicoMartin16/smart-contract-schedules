@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:compile-contracts": "npx hardhat compile",
-    "start:smart-contracts": "npx hardhat node",
-    "test:smart-contracts": "npx hardhat test",
-    "test:smart-contracts-coverage": "set SOLIDITY_COVERAGE=true && npx hardhat coverage"
+    "start:compile": "npx hardhat compile",
+    "start:contracts": "npx hardhat node",
+    "test": "npx hardhat test",
+    "test:coverage": "set SOLIDITY_COVERAGE=true && npx hardhat coverage"
   },
   "keywords": [],
   "author": "",

@@ -18,6 +18,8 @@ contract CourseContract {
         uint8 day;
         uint8 startHour;
         uint8 endHour;
+        string courseName; // Add courseName field
+        bool isActive; // Add isActive field
     }
 
     struct Course {
@@ -41,6 +43,7 @@ contract CourseContract {
     event CourseDeleted(uint id);
     event CourseUpdated(uint id, string name);
     event ScheduleAdded(uint id, uint8 day, uint8 startHour, uint8 endHour);
+    event ScheduleUpdated(uint courseId, uint scheduleId, uint8 day, uint8 startHour, uint8 endHour);
     event UserRegistered(address addr, Role role);
     event StudentRegisteredInCourse(uint courseId, address student);
 
@@ -121,18 +124,82 @@ contract CourseContract {
 
         Course storage course = courses[_id];
         uint scheduleId = course.totalSchedules + 1;
-        course.schedules[scheduleId] = Schedule(_day, _startHour, _endHour);
+        // course.schedules[scheduleId] = Schedule(_day, _startHour, _endHour, course.name, true); // Set isActive to true
+        Schedule storage schedule = course.schedules[scheduleId];
+        schedule.day = _day;
+        schedule.startHour = _startHour;
+        schedule.endHour = _endHour;
+        schedule.courseName = course.name;
+        schedule.isActive = true;
         course.totalSchedules = scheduleId;
         emit ScheduleAdded(_id, _day, _startHour, _endHour);
     }
 
-    function getSchedule(uint _courseId, uint _scheduleId) public view returns (uint8, uint8, uint8) {
+    function getSchedule(uint _courseId, uint _scheduleId) public view returns (uint8, uint8, uint8, string memory, bool) {
         require(_courseId < totalCourses, "Invalid course ID");
         require(courses[_courseId].isActive, "Course does not exist or has been deleted");
         require(_scheduleId <= courses[_courseId].totalSchedules, "Invalid schedule ID");
 
         Schedule storage schedule = courses[_courseId].schedules[_scheduleId];
-        return (schedule.day, schedule.startHour, schedule.endHour);
+        return (schedule.day, schedule.startHour, schedule.endHour, schedule.courseName, schedule.isActive);
+    }
+
+    function updateSchedule(uint _courseId, uint _scheduleId, uint8 _day, uint8 _startHour, uint8 _endHour) public {
+        require(_courseId < totalCourses, "Invalid course ID");
+        require(courses[_courseId].isActive, "Course does not exist or has been deleted");
+        require(_scheduleId <= courses[_courseId].totalSchedules, "Invalid schedule ID");
+        require(_day >= 1 && _day <= 7, "Invalid day");
+        require(_startHour < 24 && _endHour < 24 && _startHour < _endHour, "Invalid schedule");
+
+        Schedule storage schedule = courses[_courseId].schedules[_scheduleId];
+        require(schedule.isActive, "Schedule does not exist or has been deleted"); // Check if schedule is active
+        schedule.day = _day;
+        schedule.startHour = _startHour;
+        schedule.endHour = _endHour;
+        // courseName remains unchanged
+        emit ScheduleUpdated(_courseId, _scheduleId, _day, _startHour, _endHour);
+    }
+
+    function deleteSchedule(uint _courseId, uint _scheduleId) public {
+        require(_courseId < totalCourses, "Invalid course ID");
+        require(courses[_courseId].isActive, "Course does not exist or has been deleted");
+        require(_scheduleId <= courses[_courseId].totalSchedules, "Invalid schedule ID");
+
+        Schedule storage schedule = courses[_courseId].schedules[_scheduleId];
+        require(schedule.isActive, "Schedule does not exist or has been deleted");
+
+        schedule.isActive = false;
+        emit ScheduleUpdated(_courseId, _scheduleId, schedule.day, schedule.startHour, schedule.endHour); // Reuse ScheduleUpdated event
+    }
+
+    function listAllSchedules() public view returns (Schedule[] memory) {
+        uint totalSchedulesCount = 0;
+
+        for (uint i = 0; i < totalCourses; i++) {
+            if (courses[i].isActive) {
+                for (uint j = 1; j <= courses[i].totalSchedules; j++) {
+                    if (courses[i].schedules[j].isActive) {
+                        totalSchedulesCount++;
+                    }
+                }
+            }
+        }
+
+        Schedule[] memory allSchedules = new Schedule[](totalSchedulesCount);
+        uint index = 0;
+
+        for (uint i = 0; i < totalCourses; i++) {
+            if (courses[i].isActive) {
+                Course storage course = courses[i];
+                for (uint j = 1; j <= course.totalSchedules; j++) {
+                    if (course.schedules[j].isActive) {
+                        allSchedules[index] = course.schedules[j];
+                        index++;
+                    }
+                }
+            }
+        }
+        return allSchedules;
     }
 
     function registerStudentInCourse(uint _courseId) public {

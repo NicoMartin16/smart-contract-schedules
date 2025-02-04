@@ -130,7 +130,7 @@ describe("CourseManagementContract", () => {
             expect(result[2]).to.equal(10);
         });
 
-        it("should register a student to a course", async () => {
+        it("should register a student to a course", async ( ) => {
             // Arrange
             const { courseContract, client } = await loadFixture(deployCourseManagementContractFixture);
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
@@ -147,6 +147,46 @@ describe("CourseManagementContract", () => {
             assert.isArray(result);
             assert.lengthOf(result, 1);
             assert.equal(result[0], 0);
+        });
+
+        it("should list all schedules", async () => {
+            // arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+            await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
+            await courseContract.write.addSchedule([0, 1, 8, 10]);
+            await courseContract.write.addSchedule([0, 2, 8, 10]);
+            await courseContract.write.addSchedule([0, 3, 8, 10]);
+            await courseContract.write.addSchedule([0, 1, 6, 8]);
+            const result = await courseContract.read.listAllSchedules() as any[];
+
+            assert.isArray(result);
+            assert.lengthOf(result, 4);
+        });
+        
+        it("should update data from a schedule", async () => {
+            // arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+            await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
+            await courseContract.write.addSchedule([0, 1, 8, 10]);
+            const result = await courseContract.write.updateSchedule([0, 1, 1, 6, 8]);
+            const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
+
+            assert.ok(result);
+            assert.equal(schedule[1], 6);
+            assert.equal(schedule[2], 8);
+        });
+
+        it("should delete a schedule", async () => {
+            // arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+
+            // Act
+            await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
+            await courseContract.write.addSchedule([0, 1, 8, 10]);
+            const result = await courseContract.write.deleteSchedule([0, 1]);
+            const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
+            // assert
+            assert.isFalse(schedule[4]);
         });
 
     });

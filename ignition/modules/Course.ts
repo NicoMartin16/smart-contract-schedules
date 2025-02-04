@@ -30,6 +30,7 @@ const ScheduleModule = buildModule("SchedulesModule", (m) => {
   m.call(schedules, 'createCourse', ['Seguridad Informatica', 'Curso de seguridad informatica', 4], { id: 'course19' });
   m.call(schedules, 'createCourse', ['Desarrollo Web', 'Curso de desarrollo web', 4], { id: 'course20' });
   m.call(schedules, 'createCourse', ['Machine Learning', 'Curso de machine learning', 4], { id: 'course21' });
+
   
 
   return { schedules };
