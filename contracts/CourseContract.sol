@@ -15,6 +15,7 @@ contract CourseContract {
     }
 
     struct Schedule {
+        uint id; // Add id field
         uint8 day;
         uint8 startHour;
         uint8 endHour;
@@ -35,7 +36,9 @@ contract CourseContract {
 
     mapping(uint => Course) public courses;
     mapping(address => User) public users;
+    mapping(uint => Schedule) public schedulesById; // Nuevo mapeo para Schedule por ID
     uint public totalCourses;
+    uint public totalSchedules; // Contador total de schedules
 
     address public admin;
 
@@ -124,24 +127,41 @@ contract CourseContract {
 
         Course storage course = courses[_id];
         uint scheduleId = course.totalSchedules + 1;
-        // course.schedules[scheduleId] = Schedule(_day, _startHour, _endHour, course.name, true); // Set isActive to true
-        Schedule storage schedule = course.schedules[scheduleId];
+        // course.schedules[scheduleId] = Schedule(scheduleId, _day, _startHour, _endHour, course.name, true); // Set id field
+        // added course
+        Schedule storage newSchedule = course.schedules[scheduleId];
+        newSchedule.id = scheduleId;
+        newSchedule.day = _day;
+        newSchedule.startHour = _startHour;
+        newSchedule.endHour = _endHour;
+        newSchedule.courseName = course.name;
+        newSchedule.isActive = true;
+        course.totalSchedules = scheduleId; // Actualizar el total de schedules
+        // added to schedulesById mapping
+        Schedule storage schedule = schedulesById[totalSchedules];
+        schedule.id = totalSchedules;
         schedule.day = _day;
         schedule.startHour = _startHour;
         schedule.endHour = _endHour;
         schedule.courseName = course.name;
         schedule.isActive = true;
-        course.totalSchedules = scheduleId;
+        totalSchedules++; // Incrementar el contador total de schedules
         emit ScheduleAdded(_id, _day, _startHour, _endHour);
     }
 
-    function getSchedule(uint _courseId, uint _scheduleId) public view returns (uint8, uint8, uint8, string memory, bool) {
+    function getSchedule(uint _courseId, uint _scheduleId) public view returns (uint, uint8, uint8, uint8, string memory, bool) {
         require(_courseId < totalCourses, "Invalid course ID");
         require(courses[_courseId].isActive, "Course does not exist or has been deleted");
         require(_scheduleId <= courses[_courseId].totalSchedules, "Invalid schedule ID");
 
         Schedule storage schedule = courses[_courseId].schedules[_scheduleId];
-        return (schedule.day, schedule.startHour, schedule.endHour, schedule.courseName, schedule.isActive);
+        return (schedule.id, schedule.day, schedule.startHour, schedule.endHour, schedule.courseName, schedule.isActive);
+    }
+
+    function getScheduleById(uint _scheduleId) public view returns (uint, uint8, uint8, uint8, string memory, bool) {
+        require(_scheduleId < totalSchedules, "Invalid schedule ID");
+        Schedule storage schedule = schedulesById[_scheduleId];
+        return (schedule.id, schedule.day, schedule.startHour, schedule.endHour, schedule.courseName, schedule.isActive);
     }
 
     function updateSchedule(uint _courseId, uint _scheduleId, uint8 _day, uint8 _startHour, uint8 _endHour) public {
@@ -177,14 +197,13 @@ contract CourseContract {
 
         for (uint i = 0; i < totalCourses; i++) {
             if (courses[i].isActive) {
-                for (uint j = 1; j <= courses[i].totalSchedules; j++) {
+                for (uint j = 0; j <= courses[i].totalSchedules; j++) {
                     if (courses[i].schedules[j].isActive) {
                         totalSchedulesCount++;
                     }
                 }
             }
         }
-
         Schedule[] memory allSchedules = new Schedule[](totalSchedulesCount);
         uint index = 0;
 

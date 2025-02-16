@@ -116,18 +116,18 @@ describe("CourseManagementContract", () => {
             assert.equal(course[4], 1);
         });
 
-        it("should get a schedule by course id and schedule id", async () => {
+        it("should get a schedule by schedule id", async () => {
             // Arrange
             const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.addSchedule([0, 1, 8, 10]);
-            const course = await courseContract.read.getCourse([0]) as any[];
             // Act
-            const result = await courseContract.read.getSchedule([0, 1]) as any[];
+            const result = await courseContract.read.getScheduleById([0]) as any[];
             // Assert
-            expect(result[0]).to.equal(1);
-            expect(result[1]).to.equal(8);
-            expect(result[2]).to.equal(10);
+            expect(result[0]).to.equal(0n);
+            expect(result[1]).to.equal(1);
+            expect(result[2]).to.equal(8);
+            expect(result[3]).to.equal(10);
         });
 
         it("should register a student to a course", async ( ) => {
@@ -172,8 +172,8 @@ describe("CourseManagementContract", () => {
             const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
 
             assert.ok(result);
-            assert.equal(schedule[1], 6);
-            assert.equal(schedule[2], 8);
+            assert.equal(schedule[2], 6);
+            assert.equal(schedule[3], 8);
         });
 
         it("should delete a schedule", async () => {
@@ -186,7 +186,7 @@ describe("CourseManagementContract", () => {
             const result = await courseContract.write.deleteSchedule([0, 1]);
             const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
             // assert
-            assert.isFalse(schedule[4]);
+            assert.isFalse(schedule[5]);
         });
 
     });

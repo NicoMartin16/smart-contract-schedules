@@ -4,7 +4,7 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 
-const ScheduleModule = buildModule("SchedulesModule", (m) => {
+const ScheduleModule = buildModule("SchedulesModule",  (m) => {
 
   const schedules = m.contract('CourseContract');
   m.call(schedules, 'createCourse', ['Calculo Diferrencial', 'Curso de calculo diferencial', 3], {
@@ -30,6 +30,11 @@ const ScheduleModule = buildModule("SchedulesModule", (m) => {
   m.call(schedules, 'createCourse', ['Seguridad Informatica', 'Curso de seguridad informatica', 4], { id: 'course19' });
   m.call(schedules, 'createCourse', ['Desarrollo Web', 'Curso de desarrollo web', 4], { id: 'course20' });
   m.call(schedules, 'createCourse', ['Machine Learning', 'Curso de machine learning', 4], { id: 'course21' });
+
+  m.call(schedules, 'addSchedule', [0, 1, 8, 10], { id: 'schedule1' });
+  m.call(schedules, 'addSchedule', [0, 1, 10, 12], { id: 'schedule2' });
+  m.call(schedules, 'addSchedule', [0, 1, 12, 14], { id: 'schedule3' });
+
 
   
 
