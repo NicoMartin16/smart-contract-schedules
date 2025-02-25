@@ -57,8 +57,21 @@ contract CourseContract {
 
     function registerUser(address _user, Role _role) public {
         require(!users[_user].isActive, "User already registered");
-        users[_user] = User(_user, _role, true);
+        User storage newUser = users[_user];
+        newUser.addr = _user;
+        newUser.role = _role;
+        newUser.isActive = true;
         emit UserRegistered(_user, _role);
+    }
+
+    function getUser(address _user) public view returns (User memory) {
+        require(users[_user].isActive, "User not registered");
+        User memory user = users[_user];
+        return user;
+    }
+
+    function isRegistered(address _user) public view returns (bool) {
+        return users[_user].isActive;
     }
 
     function createCourse(string memory _name, string memory _description, uint _credits) public {

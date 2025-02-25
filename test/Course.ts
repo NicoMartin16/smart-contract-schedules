@@ -189,5 +189,29 @@ describe("CourseManagementContract", () => {
             assert.isFalse(schedule[5]);
         });
 
+        it("should return if a user is registered in contract", async () => {
+
+            // Arrange
+            const { courseContract, client } = await loadFixture(deployCourseManagementContractFixture);
+            await courseContract.write.registerUser([client.account.address, 0]);
+            // Act
+            const result = await courseContract.read.isRegistered([client.account.address]) as any[];
+            // Assert
+            assert.isTrue(result);
+
+        });
+
+        it("should return user", async () => {
+            // Arrange
+            const { courseContract, client } = await loadFixture(deployCourseManagementContractFixture);
+            await courseContract.write.registerUser([client.account.address, 0]);
+            // Act
+            const result = await courseContract.read.getUser([client.account.address]) as any;
+            // Assert
+            assert.equal(result.addr, client.account.address);
+            assert.equal(result.role, 0);
+            assert.isTrue(result.isActive);
+        })
+
     });
 });
