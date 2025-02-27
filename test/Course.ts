@@ -134,18 +134,35 @@ describe("CourseManagementContract", () => {
             // Arrange
             const { courseContract, client } = await loadFixture(deployCourseManagementContractFixture);
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
+            await courseContract.write.createCourse(["Vector Calculus", "Study the principles of vector calculus", 3]);
+            await courseContract.write.createCourse(["Advanced Calculus", "Study the principles of advanced calculus", 3]);
+            await courseContract.write.createCourse(["Algorithms", "Study the principles of algorithms", 3]);
+            await courseContract.write.createCourse(["Data Structures", "Study the principles of data structures", 3]);
 
             await courseContract.write.registerUser([client.account.address, 0]);
             // Act
             await courseContract.write.registerStudentInCourse([0], {
                 account: client.account.address,
             });
+            await courseContract.write.registerStudentInCourse([1], {
+                account: client.account.address,
+            });
+            await courseContract.write.registerStudentInCourse([2], {
+                account: client.account.address,
+            });
+            await courseContract.write.registerStudentInCourse([3], {
+                account: client.account.address,
+            });
+            await courseContract.write.registerStudentInCourse([4], {
+                account: client.account.address,
+            });
             const result = await courseContract.read.getStudentCourses({
                 account: client.account.address,
             }) as any[];
+
             // Assert
             assert.isArray(result);
-            assert.lengthOf(result, 1);
+            assert.lengthOf(result, 5);
             assert.equal(result[0], 0);
         });
 
