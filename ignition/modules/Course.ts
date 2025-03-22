@@ -34,6 +34,19 @@ const ScheduleModule = buildModule("SchedulesModule",  (m) => {
   m.call(schedules, 'addSchedule', [0, 1, 8, 10], { id: 'schedule1' });
   m.call(schedules, 'addSchedule', [0, 1, 10, 12], { id: 'schedule2' });
   m.call(schedules, 'addSchedule', [0, 1, 12, 14], { id: 'schedule3' });
+  m.call(schedules, 'addSchedule', [1,1,6,8], { id: 'schedule4' });
+  m.call(schedules, 'addSchedule', [1,1,8,10], { id: 'schedule5' });
+  m.call(schedules, 'addSchedule', [1,1,10,12], { id: 'schedule6' });
+  m.call(schedules, 'addSchedule', [1,1,12,14], { id: 'schedule7' });
+  m.call(schedules, 'addSchedule', [2,1,8,10], { id: 'schedule8' });
+  m.call(schedules, 'addSchedule', [2,1,10,12], { id: 'schedule9' });
+  m.call(schedules, 'addSchedule', [2,1,12,14], { id: 'schedule10' });
+  m.call(schedules, 'addSchedule', [3,1,8,10], { id: 'schedule11' });
+  m.call(schedules, 'addSchedule', [3,1,10,12], { id: 'schedule12' });
+  m.call(schedules, 'addSchedule', [3,1,12,14], { id: 'schedule13' });
+  m.call(schedules, 'addSchedule', [4,1,8,10], { id: 'schedule14' });
+  m.call(schedules, 'addSchedule', [4,1,10,12], { id: 'schedule15' });
+  m.call(schedules, 'addSchedule', [4,1,12,14], { id: 'schedule16' });
 
 
   
