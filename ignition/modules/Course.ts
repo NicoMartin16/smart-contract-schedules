@@ -8,9 +8,6 @@ import { viem } from "hardhat";
 
 const ScheduleModule = buildModule("SchedulesModule",  (m) => {
   
-  
-  viem
-
 
   const schedules = m.contract('CourseContract');
   m.call(schedules, 'createCourse', ['Calculo Diferrencial', 'Curso de calculo diferencial', 3], {
