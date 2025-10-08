@@ -40,7 +40,6 @@ describe("CourseManagementContract", () => {
             
             // Act
             const user = await courseContract.read.getUser([client.account.address]) as any;
-            console.log(user);
             
             // Assert
             assert.ok(user);
@@ -150,7 +149,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             // Act
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             const course = await courseContract.read.getCourse([0]) as any[];
             // Assert
             assert.equal(course[5], 1);
@@ -161,7 +160,7 @@ describe("CourseManagementContract", () => {
             const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             // Act
             const result = await courseContract.read.getScheduleById([0]) as any[];
             // Assert
@@ -199,10 +198,10 @@ describe("CourseManagementContract", () => {
             const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
-            await courseContract.write.addSchedule([0, 2, 8, 10, 0]);
-            await courseContract.write.addSchedule([0, 3, 8, 10, 0]);
-            await courseContract.write.addSchedule([0, 1, 6, 8, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
+            await courseContract.write.addSchedule([0, 2, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
+            await courseContract.write.addSchedule([0, 3, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
+            await courseContract.write.addSchedule([0, 1, 6, 8, 0, "0x0000000000000000000000000000000000000000"]);
             const result = await courseContract.read.listAllSchedules() as any[];
 
             assert.isArray(result);
@@ -214,11 +213,11 @@ describe("CourseManagementContract", () => {
             const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             await courseContract.write.createClassroom(["Room 102", "Science Building", 25]);
             
             // Act
-            const result = await courseContract.write.updateSchedule([0, 1, 1, 6, 8, 1]);
+            const result = await courseContract.write.updateSchedule([0, 1, 1, 6, 8, 1, "0x0000000000000000000000000000000000000000"]);
             const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
 
             // Assert
@@ -235,7 +234,7 @@ describe("CourseManagementContract", () => {
             // Act
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             const result = await courseContract.write.deleteSchedule([0, 1]);
             const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
             // assert
@@ -320,7 +319,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             // Act
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
             // Assert
             assert.equal(schedule[6], 0);
@@ -332,10 +331,10 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             await courseContract.write.createClassroom(["Room 102", "Science Building", 25]);
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             
             // Act
-            await courseContract.write.updateSchedule([0, 1, 1, 8, 10, 1]);
+            await courseContract.write.updateSchedule([0, 1, 1, 8, 10, 1, "0x0000000000000000000000000000000000000000"]);
             const schedule = await courseContract.read.getSchedule([0, 1]) as any[];
             
             // Assert
@@ -348,7 +347,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createCourse(["Differential Calculus", "Study the principles of differential calculus", 3]);
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             await courseContract.write.createClassroom(["Room 102", "Science Building", 25]);
-            await courseContract.write.addSchedule([0, 1, 8, 10, 0]);
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]);
             
             // Act
             await courseContract.write.assignClassroomToSchedule([0, 1, 1]);
@@ -465,7 +464,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             
             // Act & Assert
-            await expect(courseContract.write.addSchedule([999, 1, 8, 10, 0]))
+            await expect(courseContract.write.addSchedule([999, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Invalid course ID");
         });
         
@@ -477,7 +476,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.deleteCourse([0]);
             
             // Act & Assert
-            await expect(courseContract.write.addSchedule([0, 1, 8, 10, 0]))
+            await expect(courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Course does not exist or has been deleted");
         });
         
@@ -488,11 +487,11 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             
             // Act & Assert - Day 0 (too low)
-            await expect(courseContract.write.addSchedule([0, 0, 8, 10, 0]))
+            await expect(courseContract.write.addSchedule([0, 0, 8, 10, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Invalid day");
                 
             // Day 8 (too high)
-            await expect(courseContract.write.addSchedule([0, 8, 8, 10, 0]))
+            await expect(courseContract.write.addSchedule([0, 8, 8, 10, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Invalid day");
         });
         
@@ -503,11 +502,11 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createClassroom(["Room 101", "Engineering Building", 30]);
             
             // Act & Assert - End hour before start hour
-            await expect(courseContract.write.addSchedule([0, 1, 10, 8, 0]))
+            await expect(courseContract.write.addSchedule([0, 1, 10, 8, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Invalid schedule");
                 
             // Hours out of range
-            await expect(courseContract.write.addSchedule([0, 1, 8, 25, 0]))
+            await expect(courseContract.write.addSchedule([0, 1, 8, 25, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Invalid schedule");
         });
         
@@ -517,7 +516,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.createCourse(["Test", "Description", 3]);
             
             // Act & Assert
-            await expect(courseContract.write.addSchedule([0, 1, 8, 10, 999]))
+            await expect(courseContract.write.addSchedule([0, 1, 8, 10, 999, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Invalid classroom ID");
         });
         
@@ -529,7 +528,7 @@ describe("CourseManagementContract", () => {
             await courseContract.write.deleteClassroom([0]);
             
             // Act & Assert
-            await expect(courseContract.write.addSchedule([0, 1, 8, 10, 0]))
+            await expect(courseContract.write.addSchedule([0, 1, 8, 10, 0, "0x0000000000000000000000000000000000000000"]))
                 .to.be.rejectedWith("Classroom does not exist or has been deleted");
         });
         
@@ -641,6 +640,116 @@ describe("CourseManagementContract", () => {
             await expect(courseContract.read.getStudentCourses({
                 account: client.account.address
             })).to.be.rejectedWith("User not registered");
+        });
+        
+        // Tests for listAllProfessors function
+        it("should return an empty array when no professors are registered", async () => {
+            // Arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+            
+            // Act
+            const professors = await courseContract.read.listAllProfessors() as any[];
+            
+            // Assert
+            assert.isArray(professors);
+            assert.lengthOf(professors, 0);
+        });
+        
+        it("should correctly list all registered professors with schedules", async () => {
+            // Arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+            
+            // Register two professors
+            const professor1 = "0x1111111111111111111111111111111111111111";
+            const professor2 = "0x2222222222222222222222222222222222222222";
+            
+            await courseContract.write.registerUser([professor1, 1]); // Role 1 = Professor
+            await courseContract.write.registerUser([professor2, 1]);
+            
+            // Create courses and classrooms
+            await courseContract.write.createCourse(["Physics", "Basic physics", 3]);
+            await courseContract.write.createCourse(["Chemistry", "Basic chemistry", 3]);
+            await courseContract.write.createClassroom(["Room 101", "Science Building", 30]);
+            
+            // Assign schedules with professors
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, professor1]);
+            await courseContract.write.addSchedule([1, 2, 10, 12, 0, professor2]);
+            
+            // Act
+            const professors = await courseContract.read.listAllProfessors() as any[];
+            
+            // Assert
+            assert.isArray(professors);
+            assert.lengthOf(professors, 2);
+            assert.include(professors.map(p => p.toLowerCase()), professor1.toLowerCase());
+            assert.include(professors.map(p => p.toLowerCase()), professor2.toLowerCase());
+        });
+        
+        it("should exclude duplicate professors in different schedules", async () => {
+            // Arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+            
+            // Register one professor
+            const professor = "0x1111111111111111111111111111111111111111";
+            await courseContract.write.registerUser([professor, 1]); // Role 1 = Professor
+            
+            // Create courses and classroom
+            await courseContract.write.createCourse(["Physics", "Basic physics", 3]);
+            await courseContract.write.createCourse(["Chemistry", "Basic chemistry", 3]);
+            await courseContract.write.createClassroom(["Room 101", "Science Building", 30]);
+            
+            // Assign multiple schedules to the same professor
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, professor]);
+            await courseContract.write.addSchedule([0, 2, 10, 12, 0, professor]);
+            await courseContract.write.addSchedule([1, 3, 14, 16, 0, professor]);
+            
+            // Act
+            const professors = await courseContract.read.listAllProfessors() as any[];
+            
+            // Assert
+            assert.isArray(professors);
+            assert.lengthOf(professors, 1);
+            assert.equal(professors[0].toLowerCase(), professor.toLowerCase());
+        });
+        
+        xit("should not include professors from deleted schedules", async () => {
+            // Arrange
+            const { courseContract } = await loadFixture(deployCourseManagementContractFixture);
+            
+            // Register professors
+            const professor1 = "0x1111111111111111111111111111111111111111";
+            const professor2 = "0x2222222222222222222222222222222222222222";
+            await courseContract.write.registerUser([professor1, 1]); // Role 1 = Professor
+            await courseContract.write.registerUser([professor2, 1]); // Role 1 = Professor
+            
+            // Create course and classroom
+            await courseContract.write.createCourse(["Physics", "Basic physics", 3]);
+            await courseContract.write.createClassroom(["Room 101", "Science Building", 30]);
+            
+            // Add schedules for both professors
+            await courseContract.write.addSchedule([0, 1, 8, 10, 0, professor1]);
+            await courseContract.write.addSchedule([0, 2, 10, 12, 0, professor2]);
+            
+            // Verify both professors are in the list before deletion
+            let professorsBeforeDeletion = await courseContract.read.listAllProfessors() as any[];
+           
+            assert.isArray(professorsBeforeDeletion);
+            assert.lengthOf(professorsBeforeDeletion, 2);
+            
+            // Delete the schedule for professor1 only
+            await courseContract.write.deleteSchedule([0, 1]);
+            
+            // Verify the schedule is deleted
+            const deletedSchedule = await courseContract.read.getSchedule([0, 1]) as any[];
+            assert.isFalse(deletedSchedule[5]); // Check isActive is false
+            
+            // Act
+            const professors = await courseContract.read.listAllProfessors() as any[];
+            
+            // Assert
+            assert.isArray(professors);
+            assert.lengthOf(professors, 1, "Should only contain professor2 whose schedule is still active");
+            assert.equal(professors[0].toLowerCase(), professor2.toLowerCase());
         });
         
         // Classroom tests

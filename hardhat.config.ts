@@ -14,6 +14,11 @@ const config: HardhatUserConfig = {
     },
     hardhat: {
       chainId: 31337,
+      // Allow for larger contracts during local development
+      // Note: This won't help when deploying to real networks, but helps for testing
+      allowUnlimitedContractSize: true,
+      gas: 12000000,
+      blockGasLimit: 0x1fffffffffffff,
     },
   },
   etherscan: {

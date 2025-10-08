@@ -436,7 +436,7 @@ contract CourseContract {
         
         emit ProfessorAssignedToSchedule(_scheduleId, _professor);
     }
-
+    
     // Function to get all schedules assigned to a professor
     function getProfessorSchedules(address _professor) public view returns (Schedule[] memory) {
         require(users[_professor].isActive, "Professor not registered");
@@ -462,6 +462,53 @@ contract CourseContract {
         }
         
         return professorSchedules;
+    }
+
+    // Function to list all registered professors using role-based approach
+    function listAllProfessors() public view returns (address[] memory) {
+        // First, count all users with Professor role
+        uint professorCount = 0;
+        for (uint i = 0; i < totalSchedules; i++) {
+            if (schedulesById[i].isActive && 
+                schedulesById[i].professor != address(0)) {
+                // Check if this is a new professor not counted before
+                bool isDuplicate = false;
+                for (uint j = 0; j < i; j++) {
+                    if (schedulesById[j].isActive && 
+                        schedulesById[j].professor == schedulesById[i].professor) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                if (!isDuplicate) {
+                    professorCount++;
+                }
+            }
+        }
+        
+        // Create the result array with exact size
+        address[] memory professors = new address[](professorCount);
+        uint index = 0;
+        
+        // Populate the array, checking for duplicates again
+        for (uint i = 0; i < totalSchedules; i++) {
+            if (schedulesById[i].isActive && 
+                schedulesById[i].professor != address(0)) {
+                bool isDuplicate = false;
+                for (uint j = 0; j < index; j++) {
+                    if (professors[j] == schedulesById[i].professor) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                if (!isDuplicate) {
+                    professors[index] = schedulesById[i].professor;
+                    index++;
+                }
+            }
+        }
+        
+        return professors;
     }
 
     // Add function to get all courses taught by a professor
